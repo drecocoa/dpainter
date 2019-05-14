@@ -18,6 +18,7 @@ export class Storable{
     layer:number=0;
 
     type:string=this.constructor.name;
+    //todo!//
     static is<T extends Storable>(obj:any,c: new () => T): obj is T{
         if(obj.type===undefined)return false;
         return c.name==obj.type;

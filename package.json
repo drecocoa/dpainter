@@ -36,6 +36,11 @@
   },
   "vue":{
     "publicPath": "./",
-    "outputDir":"docs"
+    "outputDir":"docs",
+    "configureWebpack":{
+      "optimization": {
+        "minimize": false
+      }
+    }
   }
 }
