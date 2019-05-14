@@ -12,7 +12,7 @@ import { BezierAddTool, BezierView } from './Bezier';
 import { BSplineAddTool, BSplineView } from './BSpline';
 interface PainterBase{
 
-    bindCanvas(canvas: HTMLElement):void
+    onEnable(canvas: HTMLElement):void
 
     update(deltaTime: number):void
 }
@@ -35,6 +35,7 @@ export class PainterApp implements PainterBase{
     tool : MouseTool = new MouseTool();
     views : DataView[] = [];
     data ?: DataStore;
+    scale: number=1;
     currentLayer:number = 0;
     foregroundColor:string = "#000";
     backgroundColor:string = "#FFF";
@@ -58,8 +59,7 @@ export class PainterApp implements PainterBase{
         pointView.onEnable(this);
         this.views.push(pointView);
     }
-
-    bindCanvas(canvas: HTMLCanvasElement): void {
+    onEnable(canvas: HTMLCanvasElement): void {
         this.canvas = canvas;
         
         if(this.renderer){
@@ -83,6 +83,10 @@ export class PainterApp implements PainterBase{
         this.registerListeners();
         this.animationFrame(0.01);
         this.initDataView();
+    }
+
+    onDisable():void{
+        this.unregisterListeners();
     }
 
     initDataView(){
@@ -125,6 +129,7 @@ export class PainterApp implements PainterBase{
         this.canvas.removeEventListener('mouseover', this.onMouse);
         this.canvas.removeEventListener('mousemove',this.onMouse);
         this.canvas.removeEventListener('mouseup', this.onMouse);
+        this.canvas.removeEventListener('wheel', this.onWheel);
     }
 
     private registerListeners():void{
@@ -132,8 +137,13 @@ export class PainterApp implements PainterBase{
         this.canvas.addEventListener('mouseover', this.onMouse);
         this.canvas.addEventListener('mousemove',this.onMouse);
         this.canvas.addEventListener('mouseup', this.onMouse);
+        this.canvas.addEventListener('wheel', this.onWheel);
     }
 
+    private onWheel = (ev:MouseWheelEvent)=>{
+        const delta = Math.sign(ev.deltaY);
+        this.scale +=delta/50;
+    }
     mvec = new Vector3(); // create once and reuse
     mpos = new Vector3(); // create once and reuse 
     private onMouse = (ev:MouseEvent)=>{
@@ -198,6 +208,8 @@ export class PainterApp implements PainterBase{
 
     update(deltaTime:number): void {
         //update renderer
+        if(this.scale==0)this.currentCamera.position.set(0,0,0);
+        else this.currentCamera.position.set( 0, 0, 100/this.scale );
         this.renderer.render(this.currentScene,this.currentCamera);
     }
     

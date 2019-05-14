@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ui-icon-button icon="code" @change="onToolClick('None')"></ui-icon-button>
+        <ui-icon-button icon="block" @change="onToolClick('None')"></ui-icon-button>
         <ui-icon-button icon="open_with" @change="onToolClick('MoveObj')"></ui-icon-button>
         <ui-icon-button icon="show_chart" @change="onToolClick('LineAdd')"></ui-icon-button>
         <ui-icon-button icon="gesture" @change="onToolClick('BezierAdd')"></ui-icon-button>
